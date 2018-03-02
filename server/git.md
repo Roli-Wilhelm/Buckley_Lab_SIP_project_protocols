@@ -3,7 +3,7 @@ git
 
 ## Authorship
 
-Nick Youngblut (2015)
+Nick Youngblut, Sam Barnett (2017)
 
 
 ## Printing this protocol
@@ -26,10 +26,10 @@ See **Printing protocols** in the [README](../README.md#printing-protocols-conve
 * git is used for collaborating on the same set of files (eg., Jupyter notebooks).
   * It allows >= 1 user to edit the same files, combine changes, and revert
   back to old file versions if needed.
-* The central location of the Git repos on the server is `/var/git/`.
+* The central location of the Git repos on the server is `/home/git/`.
 * With git, you will make a clone (copy) of the repo, then you can edit files in the
 repo, commit (save) those changes, and push (upload) them back to the central repo
-(`/var/git/`).
+(`/home/git/`).
   * Other users can pull (download) those changes to their own copy of the repo.
   * ALSO, you can easily revert back to an old version of >=1 file in the repo.
 
@@ -49,6 +49,7 @@ repo, commit (save) those changes, and push (upload) them back to the central re
 1. Type: `git pull origin master`
   * This pulls any changes
 
+
 ### Commiting and pushing changes
 
 * This assumes that you are in a git repo.
@@ -65,6 +66,7 @@ repo, commit (save) those changes, and push (upload) them back to the central re
 1. To push changes to the central repo, type:
   * `git push origin master`
     * This is assuming that you are in the `master` branch.
+
 
 ### Reverting back to an old version of a file
 
@@ -156,7 +158,7 @@ Let's assume you want to revert a file named `TEST.txt`
 * delete|remote remote (eg. origin)
   * `git remote rm origin`
 * new origin
-  * `git remote add origin /var/git/my_repo`
+  * `git remote add origin /home/git/my_repo`
 * fetching (adding) a branch from remote
   * `git checkout --track origin/feature/CLdb_v2m`
   * OR:
@@ -206,6 +208,27 @@ Let's assume you want to revert a file named `TEST.txt`
   * `git diff HEAD@{1} filename`
 * show old version of file
   * `git show HEAD^:path/to/file`
+
+
+### Creating a new master remote repo on the server from already made project.
+
+* This will make a new master remote repo from a directory that you have already made in your home directory.
+
+1. Go into your project directory `cd /home/USER/my_project`
+2. Type: `git init`
+ 	* Inititates project as a git repo.
+3. Type: `git add .`
+  	* Adds all files to tracking
+  	* This would be the point where you should think about which files you don't want tracked (gitignore)
+4. Type: `git commit -a -m "Initial commit"`
+  	* This is your initial commit
+5. Type" `git clone --bare /home/USER/my_project /home/git/my_project.git`
+  	* Clones the project repo into the git directory but keeps in bare to save server space. This means it doesn't keep an image of the repo in the git directory.
+6. Go into the new project directory `cd /home/git/my_project.git`
+7. Type: `git init --bare --shared`
+  	* This reinitializes the new master git repo such that it can be shared with everyone in the git group.
+8. You may need to change the path to master in your local version of this project repo. To do this, go into your local project directory and type: `git remote add origin /home/git/my_project.git`.  You can check to see if your local repo is connecting to the correct master by running: `git remote show origin`.
+9. Just to be safe, push any changes that you might have made: `git push origin master`
 
 
 ## Code to make using git a bit easier
